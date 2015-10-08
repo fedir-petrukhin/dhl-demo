@@ -1,0 +1,144 @@
+/* Empty. Add your own CSS if you like */
+
+.bar.bar-energized .title {
+    color: #d40511;
+}
+.bar.bar-energized {
+    border-color: #e6b400;
+    background-color: #ffcc00;
+}
+
+.button.button-energized {
+    border-color: #e6b400;
+    background-color: #ffcc00;
+    color: #d40511;
+}
+
+.button.button-assertive {
+    border-color: #d40511;
+    background-color: #d40511;
+    color: #FFF;
+}
+
+
+h1, h5 {
+ text-align: center;
+ font-weight: bold;
+}
+
+.steps {
+ font-size: 2em;
+ line-height: 1.5em;
+}
+
+.bar.bar-balanced .title {
+ font-weight: bold;
+}
+
+.group-label {
+ color: #444;
+ font-size: 16px;
+}
+
+.clear-button {
+ color: #d40511 !important;
+ padding: 0px 20px;
+ position: absolute;
+ right: 0px; top: 0px;
+}
+
+.cam-button {
+ min-height: 24px !important;
+ min-width: 24px !important;
+ line-height: 24px !important;
+ padding: 0px;
+}
+
+.thumbnail {
+ min-height: 1em;
+}
+
+.item {
+ border-style: none;
+}
+
+.item-input {
+ padding: 2px 0px;
+}
+
+.item-input-wrapper ~ .button {
+  margin-left: 5px;
+}
+
+span.input-label {
+# font-size: 0.7em;
+ line-height: 2em;
+ padding-left: 1em;
+}
+
+.instructions {
+# font-size:  0.8em;
+ font-family: 'Helvetica Neue', Roboto, sans-serif;
+ color: #444;
+}
+
+span.item-label {
+# font-size: 0.7em;
+}
+
+label.item-input-inset, span.item-input-inset {
+ padding-bottom: 4px;
+ padding-top: 4px;
+}
+
+.bar-subheader {
+    height: 20px;
+}
+
+.item-select select {
+   background-color: transparent;
+}
+
+.select-wrapper {
+   height: 2em;
+}
+
+textarea {
+ min-height: 3em !important;
+ background-color: inherit !important;
+}
+
+#initmap {
+    display: none;
+}
+
+.yes-no {
+ max-width: 120px !important;
+ padding: 2px !important;
+}
+
+.sms-email {
+ max-width: 160px !important;
+ padding: 2px !important;
+}
+
+.yes-no-add {
+ max-width: 180px !important;
+ padding: 2px !important;
+}
+
+.item-subheader {
+ padding: 4px 10px;
+ background-color: #ffcc00;
+ color: #d40511;
+ text-align: center;
+ font-weight: bold;
+ border-top: 1px solid white;
+}
+
+.bar-energized .button.button-clear {
+ color: #d40511;
+}
+
+
+

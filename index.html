@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/ionic/js/angular-resource.min.js"></script>
+    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyALnQD01bMsm818-jKYiYTz9vqbRI3IrYc&sensor=false"></script>
+    <!-- your app's js -->
+    <script src="js/app.js"></script>
+<!--
+    <script src="js/services.js"></script>
+-->
+
+</head>
+
+<body ng-app="starter">
+
+<ion-nav-bar class="bar-energized" align-title="center">
+</ion-nav-bar>
+
+<ion-nav-view class="slide-left-right">
+</ion-nav-view>
+
+<!--<div data-tap-disabled="true">
+<div id="initmap"></div>
+</div>-->
+
+<script id="page0.html" type="text/ng-template">
+    <ion-view title="Incident management" hide-back-button="true" style="background-color: #ffcc00">
+        <ion-content class="padding">
+            <div class="card-inset padding energized" style="text-align: center">
+                <img style="max-width: 300px !important" src="img/logo-dhl.png"/>
+                <h1>Incident management</h1>
+                <h6>v1.0.0 (12.05.2015)</h6>
+            </div>
+            <p>1. Identification </p>
+            <p>2. Location </p>
+            <p>3. Incident Description </p>
+            <p>4. Actions&Damange Control </p>
+            <p>5. Finalization </p>
+            <div class="card-inset" style="text-align: center">
+                <a class="button button-assertive" ui-sref="page1" style="width: 120px">Start</a>
+            </div>
+        </ion-content>
+    </ion-view>
+</script>
+
+<!--<script id="page2map.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar>
+            <h1 class="title">Location</h1>
+            <div class="button button-clear icon-right" ng-click="mapModal.hide()"><span class="icon ion-android-close"></span></div>
+        </ion-header-bar>
+        <ion-content has-header="true" padding="true">
+                <div id="map_canvas" style="width:100% !important;height: 400px !important"></div>
+        </ion-content>
+    </ion-modal-view>
+</script>-->
+
+<script id="image-preview.html" type="text/ng-template">
+    <ion-modal-view>
+        <ion-header-bar>
+            <h1 class="title">{{report.imageTitle}}</h1>
+            <div class="button button-clear icon-right" ng-click="imageModal.hide()"><span class="icon ion-android-close"></span></div>
+        </ion-header-bar>
+        <ion-content has-header="true" padding="true">
+            <img ng-show="report.imageURI !== undefined" ng-src="{{report.imageURI}}">
+        </ion-content>
+    </ion-modal-view>
+</script>
+
+<script id="page1.html" type="text/ng-template">
+    <ion-view title="1. Identification" class="light">
+        <ion-nav-buttons side="left">
+            <a class="button button-clear ion-android-arrow-back icon-left" ui-sref="page0"></a>
+        </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+            <a class="button button-clear ion-android-arrow-forward icon-right" ui-sref="page2"></a>
+        </ion-nav-buttons>
+        <ion-content>
+            <form id="formIdentification" name="formIdentification" ng-submit="moveFocus()">
+            <div class="list">
+                <div class="item item-inset item-subheader">1.1 Incident data <a class="button button-clear button-small ion-close-circled icon-right clear-button" ng-click="resetSection(1)">reset</a></span>
+                </div>
+                <label class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Incident number</span>
+                    <span class="item-input item-input-wrapper">
+                        <input type="text" ng-model="report.incidentNumber" id="incidentNumber" name="incidentNumber" ng-enter="moveFocus()">
+                    </span>
+                </label>
+                <label class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Date</span>
+                    <span class="item-input item-input-wrapper">
+                        <input type="date" ng-model="report.date" id="rDate" name="date" ng-enter="moveFocus()">
+                    </span>
+                </label>
+                <label class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Time</span>
+                    <span class="item-input item-input-wrapper">
+                        <input type="time" ng-model="report.time" id="rTime" name="time" ng-enter="moveFocus()">
+                    </span>
+                </label>
+                <label class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Vehicle number</span>
+                    <span class="item-input item-input-wrapper">
+                        <input id="vehicleNumber" name="vehicleNumber" type="text" ng-model="report.vehicleNumber" tabindex="1" ng-enter="moveFocus()" ng-model="report.vehicleNumber"/>
+                    </span>
+                    </span>
+                </label>
+                <span class="item item-inset item-subheader">1.2 Driver information<a class="button button-clear button-small ion-close-circled icon-right clear-button" ng-click="resetSection(2)">reset</a></span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Name</span>
+                    <span class="item-input item-input-wrapper">
+                        <input id="driverName" name="driverName" type="text" tabindex="2" ng-enter="moveFocus()" ng-model="report.name"/>
+                    </span>
+                </span>
+                <ion-checkbox ng-model="report.isDriverAtTimeOfIncident" class="checkbox-assertive">Driver at time of incident</ion-checkbox>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Address</span>
+                    <span class="item-input item-input-wrapper">
+                        <textarea id="driverAddress" name="driverAddress" type="text" tabindex="3" ng-model="report.address"></textarea>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Telephone number</span>
+                    <span class="item-input item-input-wrapper">
+                        <input id="driverTelephone" name="driverTelephone" type="tel" tabindex="4" ng-enter="moveFocus()" ng-model="report.telephoneNumber"/>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Driving license no.</span>
+                    <span class="item-input">
+                        <span class="item-input-wrapper">
+                            <input id="driverLicense" name="driverLicense" type="text" tabindex="5" ng-enter="moveFocus()" ng-model="report.licenseNumber"/>
+                        </span>
+                        <button type="button" id="driverLicensePhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.driverLicensePhoto" ng-click="showPicture('Driver`s license', report.driverLicensePhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('driverLicensePhoto')"></button>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Passport no.</span>
+                    <span class="item-input">
+                        <span class="item-input-wrapper">
+                            <input id="driverPassport" name="driverPassport" type="text" ng-model="report.driverPassport" tabindex="6" ng-enter="moveFocus()"/>
+                        </span>
+                        <button type="button" id="driverPassportPhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.driverPassportPhoto" ng-click="showPicture('Passport',report.driverPassportPhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('driverPassportPhoto')"></button>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Other documents (e.g. other IDs)</span>
+                    <span class="item-input">
+                        <span class="item-input-wrapper">
+                            <input id="driverOther" name="driverOther" type="text" ng-model="report.driverOther" tabindex="7" ng-enter="moveFocus()"/>
+                        </span>
+                        <button type="button" id="driverOtherPhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.driverOtherPhoto" ng-click="showPicture('Other documents',report.driverOtherPhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('driverOtherPhoto')"></button>
+                    </span>
+                </span>
+                <span class="item item-inset item-subheader">1.3 Extra Driver <a class="button button-clear button-small ion-close-circled icon-right clear-button" ng-click="resetSection(3)">reset</a></span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Name</span>
+                    <span class="item-input item-input-wrapper">
+                        <input id="extraDriverName" name="extraDriverName" type="text" tabindex="8" ng-enter="moveFocus()" ng-model="report.extraDriverName"/>
+                    </span>
+                </span>
+                <ion-checkbox ng-model="report.isExtraDriverAtTimeOfIncident" class="checkbox-assertive">Driver at time of incident</ion-checkbox>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Address</span>
+                    <span class="item-input item-input-wrapper">
+                        <textarea id="extraDriverAddress" name="extraDriverAddress" type="text" tabindex="9" ng-model="report.extraDriverAddress"></textarea>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Telephone number</span>
+                    <span class="item-input item-input-wrapper">
+                        <input id="extraDriverTelephone" name="extraDriverTelephone" type="tel" tabindex="10" ng-enter="moveFocus()" ng-model="report.extraDriverTelephoneNumber"/>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Driving license no.</span>
+                    <span class="item-input">
+                        <span class="item-input-wrapper">
+                            <input id="extraDriverLicense" name="extraDriverLicense" type="text" tabindex="11" ng-enter="moveFocus()" ng-model="report.extraDriverLicenseNumber"/>
+                        </span>
+                        <button type="button" id="extraDriverLicensePhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.extraDriverLicensePhoto" ng-click="showPicture('Driver`s license', report.extraDriverLicensePhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('extraDriverLicensePhoto')"></button>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Passport no.</span>
+                    <span class="item-input">
+                        <span class="item-input-wrapper">
+                            <input id="extraDriverPassport" name="extraDriverPassport" type="text" ng-model="report.extraDriverPassport" tabindex="12" ng-enter="moveFocus()"/>
+                        </span>
+                        <button type="button" id="extraDriverPassportPhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.extraDriverPassportPhoto" ng-click="showPicture('Passport',report.extraDriverPassportPhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('extraDriverPassportPhoto')"></button>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Other documents (e.g. other IDs)</span>
+                    <span class="item-input">
+                        <span class="item-input-wrapper">
+                            <input id="extraDriverOther" name="extraDriverOther" type="text" ng-model="report.extraDriverOther" tabindex="13" ng-enter="moveFocus()"/>
+                        </span>
+                        <button type="button" id="extraDriverOtherPhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.extraDriverOtherPhoto" ng-click="showPicture('Other documents',report.extraDriverOtherPhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('extraDriverOtherPhoto')"></button>
+                    </span>
+                </span>
+                <span class="item item-inset item-subheader">1.4 Other parties/opponent:<a class="button button-clear button-small ion-close-circled icon-right clear-button" ng-click="resetSection(4)">reset</a></span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Name</span>
+                    <span class="item-input item-input-wrapper">
+                        <input id="opponentName" name="opponentName" type="text" tabindex="14" ng-enter="moveFocus()" ng-model="report.opponentName"/>
+                    </span>
+                </span>
+                <label class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Telephone number</span>
+                    <label class="item-input item-input-wrapper">
+                        <input id="opponentTelephone" name="opponentTelephone" ng-model="report.opponentTelephone" type="tel" tabindex="15" ng-enter="moveFocus()"/>
+                    </label>
+                </label>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Driving license no.</span>
+                    <span class="item-input">
+                        <label class="item-input-wrapper">
+                            <input id="opponentLicense" name="opponentLicense" ng-model="report.opponentLicense" type="text" tabindex="16" ng-enter="moveFocus()"/>
+                        </label>
+                        <button type="button" id="opponentLicensePhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.opponentLicensePhoto" ng-click="showPicture('Driver`s license',report.opponentLicensePhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('opponentLicensePhoto')"></button>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Passport no.</span>
+                    <span class="item-input">
+                        <label class="item-input-wrapper">
+                            <input id="opponentPassport" name="opponentPassport" ng-model="report.opponentPassport" type="text" tabindex="17" ng-enter="moveFocus()">
+                        </label>
+                        <button type="button" id="opponentPassportPhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.opponentPassportPhoto" ng-click="showPicture('Passport',report.opponentPassportPhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('opponentPassportPhoto')"></button>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Other documents (e.g. other IDs)</span>
+                    <span class="item-input">
+                        <label class="item-input-wrapper">
+                            <input id="opponentOther" name="opponentOther" ng-model="report.opponentOther" type="text" tabindex="18" ng-enter="moveFocus()">
+                        </label>
+                        <button type="button" id="opponentOtherPhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.opponentOtherPhoto" ng-click="showPicture('Other documents',report.opponentOtherPhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('opponentOtherPhoto')"></button>
+                    </span>
+                </span>
+                <span class="item item-inset item-subheader">1.5 Witnesses<a class="button button-clear button-small ion-close-circled icon-right clear-button" ng-click="resetSection(5)">reset</a></span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Name</span>
+                    <span class="item-input item-input-wrapper">
+                        <input id="witnessName" name="witnessName" type="text" tabindex="19" ng-enter="moveFocus()" ng-model="report.witnessName"/>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Telephone number</span>
+                    <label class="item-input item-input-wrapper">
+                        <input id="witnessesTelephone" name="witnessesTelephone" ng-model="report.witnessesTelephone" type="tel" tabindex="20" ng-enter="moveFocus()">
+                    </label>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Driving license no.</span>
+                    <span class="item-input">
+                        <label class="item-input-wrapper">
+                            <input id="witnessesLicense" name="witnessesLicense" ng-model="report.witnessesLicense" type="text" tabindex="21" ng-enter="moveFocus()">
+                        </label>
+                        <button type="button" id="witnessesLicensePhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.witnessesLicensePhoto" ng-click="showPicture('Driver`s license',report.witnessesLicensePhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('witnessesLicensePhoto')"></button>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Passport no.</span>
+                    <span class="item-input">
+                        <label class="item-input-wrapper">
+                            <input id="witnessesPassport" name="witnessesPassport" ng-model="report.witnessesPassport" type="text" tabindex="22" ng-enter="moveFocus()">
+                        </label>
+                        <button type="button" id="witnessesPassportPhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.witnessesPassportPhoto" ng-click="showPicture('Passport',report.witnessesPassportPhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('witnessesPassportPhoto')"></button>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Other documents</span>
+                    <span class="item-input">
+                        <label class="item-input-wrapper">
+                            <input id="witnessesOther" name="witnessesOther" ng-model="report.witnessesOther" type="text" tabindex="23" ng-enter="moveFocus()">
+                        </label>
+                        <button type="button" id="witnessesOtherPhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.witnessesOtherPhoto" ng-click="showPicture('Other documents',report.witnessesOtherPhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('witnessesOtherPhoto')"></button>
+                    </span>
+                </span>
+                <span class="item item-inset item-subheader">1.6 Shipping documents<a class="button button-clear button-small ion-close-circled icon-right clear-button" ng-click="resetSection(6)">reset</a></span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Waybill Number(s)</span>
+                    <span class="item-input">
+                        <label class="item-input-wrapper">
+                            <input id="waybillNumber" name="waybillNumber" ng-model="report.waybillNumber" type="text" tabindex="24" ng-enter="moveFocus()">
+                        </label>
+                        <button type="button" id="waybillNumberPhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.waybillNumberPhoto" ng-click="showPicture('Waybill Number',report.waybillNumberPhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('waybillNumberPhoto')"></button>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Tracking Number(s)</span>
+                    <span class="item-input">
+                        <label class="item-input-wrapper">
+                            <input id="trackingNumber" name="trackingNumber" ng-model="report.trackingNumber" type="text" type="text" tabindex="25" ng-enter="moveFocus()">
+                        </label>
+                        <button type="button" id="trackingNumberPhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.trackingNumberPhoto" ng-click="showPicture('Tracking Number',report.trackingNumberPhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('trackingNumberPhoto')"></button>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Parcel Number(s)</span>
+                    <span class="item-input">
+                        <label class="item-input-wrapper">
+                            <input id="parcelNumber" name="parcelNumber" ng-model="report.parcelNumber" type="text" tabindex="26" ng-enter="moveFocus()">
+                        </label>
+                        <button type="button" id="parcelNumberPhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.parcelNumberPhoto" ng-click="showPicture('Parcel Number',report.parcelNumberPhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('parcelNumberPhoto')"></button>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Customer ID</span>
+                    <label class="item-input item-input-wrapper">
+                        <input id="customerId" name="customerId" ng-model="report.customerId" type="text" tabindex="27" ng-enter="moveFocus()">
+                    </label>
+                </span>
+                <span class="item item-inset item-subheader">1.7 Police involvement<a class="button button-clear button-small ion-close-circled icon-right clear-button" ng-click="resetSection(7)">reset</a></span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Police report available</span>
+                    <div class="button-bar yes-no">
+                        <a class="button button-small" ng-class="{'button-assertive': report.policeReportMade == 'yes'}" ng-click="report.policeReportMade = 'yes'">Yes</a>
+                        <a class="button button-small" ng-class="{'button-assertive': report.policeReportMade == 'no'}" ng-click="report.policeReportMade = 'no'">No</a>
+                    </div>
+                </span>
+                <span class="item item-input-inset item-stacked-label" ng-show="report.policeReportMade == 'yes'">
+                    <span class="item-label">Police Report Number</span>
+                    <span class="item-input">
+                        <label class="item-input-wrapper">
+                            <input id="policeReportNumber" name="policeReportNumber" ng-model="report.policeReportNumber" type="text" tabindex="28" ng-enter="moveFocus()">
+                        </label>
+                        <button type="button" id="policeReportNumberPhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.policeReportNumberPhoto" ng-click="showPicture('Police report number',report.policeReportNumberPhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('policeReportNumberPhoto')"></button>
+                    </span>
+                </span>
+            </div>
+            </form>
+        </ion-content>
+        <ion-footer-bar class="bar-energized">
+            <div class="buttons buttons-left">
+                <a class="button button-clear ion-android-arrow-back icon-left" ui-sref="page0"></a>
+            </div>
+            <div class="title" style="text-align: center">
+                <a class="button small-button button-energized" ui-sref="page2" style="margin: 7px 7px;">Save</a>
+            </div>
+            <div class="buttons buttons-right">
+                <a class="button button-clear ion-android-arrow-forward icon-right" ui-sref="page2"></a>
+            </div>
+        </ion-footer-bar>
+    </ion-view>
+</script>
+
+<script id="page2.html" type="text/ng-template">
+    <ion-view title="2. Location" afterEnter="">
+        <ion-nav-buttons side="left">
+            <a class="button button-clear ion-android-arrow-back icon-left" ui-sref="page1"></a>
+        </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+            <a class="button button-clear ion-android-arrow-forward icon-right" ui-sref="page3"></a>
+        </ion-nav-buttons>
+        <ion-content>
+            <form id="formLocation" name="formLocation" ng-submit="moveFocus()">
+            <div class="list">
+                <div class="padding card-inset" class="instructions">
+                    <span>Drag the red pointer to the location of incident</span>
+                </div>
+                <div class="padding card-inset" ng-show="googleMailErrors" class="instructions">
+                    <span>{{googleMailErrors}}</span>
+                </div>
+                <div class="padding" data-tap-disabled="true">
+                    <div id="map_canvas" style="width:100% !important;height: 300px !important"></div>
+                </div>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">GPS Location</span>
+                    <span class="item-input">
+                        <label class="item-input-wrapper">
+                            <input id="gpsLocation" name="gpsLocation" ng-model="report.gpsLocation" type="text" tabindex="1" ng-enter="moveFocus()">
+                        </label>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="input-label">Where did it happen? </span>
+                </span>
+                <label class="item item-input-inset item-select">
+                    <label class="item-input-wrapper select-wrapper">
+                        <select ng-model="report.whereItHappend" tabindex="2">
+                            <option>Inside truck</option>
+                            <option>Outside truck</option>
+                            <option>On loading bay</option>
+                            <option>Other ...</option>
+                        </select>
+                    </label>
+                </label>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Description</span>
+                    <span class="item-input">
+                        <label class="item-input-wrapper">
+                            <textarea id="locationDescription" name="gpsLocation" type="text" tabindex="3" ng-model="report.locationDescription"></textarea>
+                        </label>
+                        <button type="button" id="locationPhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.locationPhoto" ng-click="showPicture('Location Photo',report.locationPhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('locationPhoto')"></button>
+                    </span>
+                </span>
+            </div>
+            </form>
+        </ion-content>
+        <ion-footer-bar class="bar-energized">
+            <div class="buttons buttons-left">
+                <a class="button button-clear ion-android-arrow-back icon-left" ui-sref="page1"></a>
+            </div>
+            <div class="title" style="text-align: center">
+                <a class="button small-button button-energized" ui-sref="page3" style="margin: 7px 7px;">Save</a>
+            </div>
+            <div class="buttons buttons-right">
+                <a class="button button-clear ion-android-arrow-forward icon-right" ui-sref="page3"></a>
+            </div>
+        </ion-footer-bar>
+    </ion-view>
+</script>
+
+<script id="page3.html" type="text/ng-template">
+    <ion-view title="3. Incident Description">
+        <ion-nav-buttons side="left">
+            <a class="button button-clear ion-android-arrow-back icon-left" ui-sref="page2"></a>
+        </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+            <a class="button button-clear ion-android-arrow-forward icon-right" ui-sref="page4"></a>
+        </ion-nav-buttons>
+        <ion-content>
+            <form id="formDescription" name="formLocation" ng-submit="moveFocus()">
+            <div class="list">
+                <span class="item item-inset item-subheader">3.1 Takeover</span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Were goods damaged when received?</span>
+                    <div class="button-bar yes-no">
+                        <a class="button button-small" ng-class="{'button-assertive': report.wasGoodsDamaged == 'yes'}" ng-click="report.wasGoodsDamaged = 'yes'">Yes</a>
+                        <a class="button button-small" ng-class="{'button-assertive': report.wasGoodsDamaged == 'no'}" ng-click="report.wasGoodsDamaged = 'no'">No</a>
+                    </div>
+                </span>
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Was vehicle damaged when received?</span>
+                    <div class="button-bar yes-no">
+                        <a class="button button-small" ng-class="{'button-assertive': report.wasTruckDamaged == 'yes'}" ng-click="report.wasTruckDamaged = 'yes'">Yes</a>
+                        <a class="button button-small" ng-class="{'button-assertive': report.wasTruckDamaged == 'no'}" ng-click="report.wasTruckDamaged = 'no'">No</a>
+                    </div>
+                </span>
+                <span class="item item-inset item-subheader">3.2 Goods</span>
+                <span>
+                    <div class="card-inset padding">
+                        <p>Instruction : Goods, all parcels/Pallets must be registrated and photo made. <a style="color: #d40511" class="button-clear energized ion-android-add button-small" ng-click="addGoodsDamage()">Add more parcels</a> </p>
+                    </div>
+                    <span ng-repeat="damage in report.goodsDamage">
+                        <span class="item item-input-inset item-stacked-label">
+                            <span class="item-label">Parcel Number</span>
+                            <span class="item-input">
+                                <label class="item-input-wrapper">
+                                    <input id="parcelNumber{{$index}}" name="parcelNumber{{$index}}" ng-model="damage.parcelNumber" type="text" ng-enter="moveFocus()">
+                                </label>
+                                <button type="button" id="parcelNumber{{$index}}Photo" class="button cam-button button-clear button-energized ion-android-attach" ng-show="damage.parcelNumberPhoto" ng-click="showPicture('Parcel number photo',damage.parcelNumberPhoto)"></button>
+                                <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takeDamagePicture(damage,'parcelNumberPhoto',$index)"></button>
+                            </span>
+                        </span>
+                        <span class="item item-input-inset item-stacked-label">
+                            <span class="item-label">
+                                <label class="item item-input item-select">
+                                    <span class="input-label">Damage</span>
+                                    <select ng-model="damage.type">
+                                        <option>Water damage</option>
+                                        <option>Broken</option>
+                                        <option>Other ...</option>
+                                    </select>
+                                </label>
+                            </span>
+                            <span class="item-input">
+                                <label class="item-input-wrapper">
+                                    <textarea id="parcelDamage{{$index}}" name="parcelDamage{{$index}}" type="text" ng-model="damage.description"></textarea>
+                                </label>
+                                <button type="button" id="parcelDamage{{$index}}Photo" class="button cam-button button-clear button-energized ion-android-attach" ng-show="damage.parcelDamagePhoto" ng-click="showPicture('Parcel damage photo',damage.parcelDamagePhoto)"></button>
+                                <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takeDamagePicture(damage,'parcelDamagePhoto',$index)"></button>
+                            </span>
+                        </span>
+                    </span>
+                </span>
+                <span class="item item-inset item-subheader">3.3 Truck</span>
+                <span>
+                    <div class="card-inset padding">
+                        <p>Instruction: Tap on vehicle to attach damage photo.</p>
+                    </div>
+                    <div class="item">
+                        <div ng-repeat="carPic in report.carPics" style="width: 40px; height: 40px; position: absolute; top: {{carPic.top}}px; left: {{carPic.left}}px; background-color: transparent;"><img style="max-width: 40px; max-height: 40px;" ng-src="{{carPic.src}}"/></div>
+                        <img ng-click="takeAndAttachPicture($event)" src="img/car.png"/>
+                    </div>
+                </span>
+                <span class="item item-inset item-subheader">3.4 Personal injury</span>
+                <div class="card-inset padding">Property damaged description</div>
+                <span class="item">
+                    <span class="item-input">
+                        <label class="item-input-wrapper">
+                            <textarea id="personalinjuryDescription" name="personalinjuryDescription" type="text" ng-model="report.personalinjuryDescription"></textarea>
+                        </label>
+                        <button type="button" id="personalinjuryPhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.personalinjuryPhoto" ng-click="showPicture('Personal injury photo',report.personalinjuryPhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('personalinjuryPhoto')"></button>
+                    </span>
+                </span>
+                <span class="item item-inset item-subheader">3.5 Property damage</span>
+                <div class="card-inset padding">Property damaged description</div>
+                <span class="item">
+                    <span class="item-input">
+                        <label class="item-input-wrapper ">
+                            <textarea id="propertyDamagedDescription" name="propertyDamagedDescription" type="text" ng-model="report.propertyDamagedDescription"></textarea>
+                        </label>
+                        <button type="button" id="propertyDamagedPhoto" class="button cam-button button-clear button-energized ion-android-attach" ng-show="report.propertyDamagedPhoto" ng-click="showPicture('Personal injury photo',report.propertyDamagedPhoto)"></button>
+                        <button type="button" class="button cam-button button-clear button-assertive ion-android-camera" ng-click="takePicture('propertyDamagedPhoto')"></button>
+                    </span>
+                </span>
+            </div>
+            </form>
+        </ion-content>
+        <ion-footer-bar class="bar-energized">
+            <div class="buttons buttons-left">
+                <a class="button button-clear ion-android-arrow-back icon-left" ui-sref="page2"></a>
+            </div>
+            <div class="title" style="text-align: center">
+                <a class="button small-button button-energized" ui-sref="page4" style="margin: 7px 7px;">Save</a>
+            </div>
+            <div class="buttons buttons-right">
+                <a class="button button-clear ion-android-arrow-forward icon-right" ui-sref="page4"></a>
+            </div>
+        </ion-footer-bar>
+    </ion-view>
+</script>
+
+<script id="page4.html" type="text/ng-template">
+    <ion-view title="4. Actions & Damage Control">
+        <ion-nav-buttons side="left">
+            <a class="button button-clear ion-android-arrow-back icon-left" ui-sref="page3"></a>
+        </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+            <a class="button button-clear ion-android-arrow-forward icon-right" ui-sref="page5"></a>
+        </ion-nav-buttons>
+        <ion-content>
+            <form id="actionAndDamageControl">
+            <div class="list">
+                <span class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Can vehicle continue?</span>
+                    <div class="button-bar yes-no">
+                        <a class="button button-small" ng-class="{'button-assertive': isAnswer('q1','yes')}" ng-click="answer('q1','yes')">Yes</a>
+                        <a class="button button-small" ng-class="{'button-assertive': isAnswer('q1','no')}" ng-click="answer('q1','no')">No</a>
+                    </div>
+                </span>
+                <span ng-show="report.q1 == 'yes'" class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Can shipments be continued?</span>
+                    <div class="button-bar yes-no">
+                        <a class="button button-small" ng-class="{'button-assertive': isAnswer('q2','yes')}" ng-click="answer('q2','yes')">Yes</a>
+                        <a class="button button-small" ng-class="{'button-assertive': isAnswer('q2','no')}" ng-click="answer('q2','no')">No</a>
+                    </div>
+                </span>
+                <span ng-show="report.q2 == 'yes'" class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Is any box(es) damaged?</span>
+                    <div class="button-bar yes-no">
+                        <a class="button button-small" ng-class="{'button-assertive': isAnswer('q3','yes')}" ng-click="answer('q3','yes')">Yes</a>
+                        <a class="button button-small" ng-class="{'button-assertive': isAnswer('q3','no')}" ng-click="answer('q3','no')">No</a>
+                    </div>
+                </span>
+                <span ng-show="report.q3 == 'no'" class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Will incident cause delay?</span>
+                    <div class="button-bar yes-no">
+                        <a class="button button-small" ng-class="{'button-assertive': isAnswer('q4','yes')}" ng-click="answer('q4','yes')">Yes</a>
+                        <a class="button button-small" ng-class="{'button-assertive': isAnswer('q4','no')}" ng-click="answer('q4','no')">No</a>
+                    </div>
+                </span>
+                <span ng-show="report.q4 == 'no'" class="item item-input-inset item-stacked-label">
+                    <span class="item-label">Do you need any support now?</span>
+                    <div class="button-bar yes-no">
+                        <a class="button button-small" ng-class="{'button-assertive': isAnswer('q5','yes')}" ng-click="answer('q5','yes')">Yes</a>
+                        <a class="button button-small" ng-class="{'button-assertive': isAnswer('q5','no')}" ng-click="answer('q5','no')">No</a>
+                    </div>
+                </span>
+                <span ng-show="report.q5 == 'yes'" class="item item-input-inset item-stacked-label" ng-show="report.a1">
+                    <span class="item-label">What is needed?</span>
+                    <span class="item-input item-input-wrapper">
+                        <textarea style="height: 12em" id="whatIsNeeded" name="whatIsNeeded" ng-model="report.whatIsNeeded" type="text"></textarea>
+                    </span>
+                </span>
+                <span class="item item-input-inset item-stacked-label" ng-show="report.q1 == 'no' || report.q2 == 'no' || report.q3 == 'yes'" class="instructions">
+                    <span>
+                        <p>Report to company and wait for instructions</p>
+                    </span>
+                    <span class="item-input">
+                        <label class="item-input-wrapper ">
+                            <textarea style="height: 12em" ng-model="report.messageText" ></textarea>
+                        </label>
+                    </span>
+                    <ion-checkbox ng-model="report.isCallbackRequired" class="checkbox-assertive">Callback</ion-checkbox>
+                    <span class="item item-input-inset item-stacked-label">
+                        <span class="item-label">Callback number</span>
+                        <span class="item-input item-input-wrapper">
+                            <input id="additionalCallbackNumber" name="additionalCallbackNumber" type="tel" ng-enter="moveFocus()" ng-model="report.additionalCallbackNumber"/>
+                        </span>
+                    </span>
+                    <div class="button-bar sms-email">
+                        <a class="button button-small" ng-click="sendSMS()">SMS</a>
+                        <a class="button button-small" ng-click="sendEmail()">e-Mail</a>
+                    </div>
+                </span>
+                <div class="padding card-inset" ng-show="report.q4 == 'yes' || report.q5 == 'no'" class="instructions">
+                    <span>Report to customer(s)/consignee(s) the damage and delay</span>
+                </div>
+            </div>
+            </form>
+        </ion-content>
+        <ion-footer-bar class="bar-energized">
+            <div class="buttons buttons-left">
+                <a class="button button-clear ion-android-arrow-back icon-left" ui-sref="page3"></a>
+            </div>
+            <div class="title" style="text-align: center">
+                <a class="button small-button button-energized" ui-sref="page5" style="margin: 7px 7px;">Save</a>
+            </div>
+            <div class="buttons buttons-right">
+                <a class="button button-clear ion-android-arrow-forward icon-right" ui-sref="page5"></a>
+            </div>
+        </ion-footer-bar>
+    </ion-view>
+</script>
+
+<script id="page5.html" type="text/ng-template">
+    <ion-view title="5. Finalization">
+        <ion-nav-buttons side="left">
+            <a class="button button-clear ion-android-arrow-back icon-left" ui-sref="page4"></a>
+        </ion-nav-buttons>
+        <ion-content class="padding">
+            <div class="list">
+                <div class="card-inset">
+                    <span>It is very important that you send this report as soon as possible after the incident occurred.<br/><br/></span>
+                </div>
+                <div class="card-inset" style="text-align: center;">
+                    <span ng-show="report.wasSent" class="item-label"><p>Report no. {{report.incidentNumber}} was sent.</p></span>
+                    <a ng-show="!report.wasSent" class="button button-assertive" ng-click="sendReport()" style="width: 120px;">Send report</a>
+                    <a ng-show="report.wasSent" class="button button-assertive  " ng-click="exitApp()" style="width: 120px;">Exit</a>
+                </div>
+            </div>
+        </ion-content>
+        <ion-footer-bar class="bar-energized">
+            <div class="buttons buttons-left">
+                <a class="button button-clear ion-android-arrow-back icon-left" ui-sref="page4"></a>
+            </div>
+            <div class="title"></div>
+            <div class="buttons buttons-right">
+            </div>
+        </ion-footer-bar>
+    </ion-view>
+</script>
+
+
+</body>
+</html>
