@@ -7,6 +7,8 @@
     <author email="support@phonegap.com" href="http://phonegap.com">
         Fedir Petrukhin
     </author>
+    <allow-navigation href="*" />
+    <allow-intent href="sms:*" />
     <content src="index.html" />
     <preference name="permissions" value="none" />
     <preference name="orientation" value="default" />
@@ -48,6 +50,7 @@
     <gap:config-file platform="android" parent="/manifest">
         <application android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar"></application>
     </gap:config-file>
+
 
     <feature name="DatePickerPlugin">
         <param name="android-package" value="com.plugin.datepicker.DatePickerPlugin"/>
