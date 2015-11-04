@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.cc-interactive.dhldemo" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
-    <name>DHL Incident Management</name>
+    <name>DHL Incident Report Demo</name>
     <description>
-        DHL Incident Management Demo Application.
+        DHL Incident Report Demo (by Cc-Interactive AsP).
     </description>
-    <author email="support@phonegap.com" href="http://phonegap.com">
+    <author email="fpe@cc-interactive.com" href="http://cc-interactive.com">
         Fedir Petrukhin
     </author>
     <preference name='phonegap-version' value='cli-5.1.1' />
@@ -62,7 +62,7 @@
     </feature>
 
     <!--<gap:plugin name="org.apache.cordova.vibration" />-->
-    <icon src="icon-dhl.png" />
+    <icon src="icon.png" />
     <icon gap:platform="android" gap:qualifier="ldpi" src="www/res/icon/android/icon-36-ldpi.png" />
     <icon gap:platform="android" gap:qualifier="mdpi" src="www/res/icon/android/icon-48-mdpi.png" />
     <icon gap:platform="android" gap:qualifier="hdpi" src="www/res/icon/android/icon-72-hdpi.png" />
