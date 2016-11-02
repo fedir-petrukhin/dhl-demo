@@ -1,5 +1,5 @@
 angular.module('starter.services', ['ngResource'])
 
 .factory('Complaints', function ($resource) {
-    return $resource('http://cci:a1s2d3f4@incident-manager.cc-interactive.com.ua/imgmt/incidents');
+    return $resource('http://incident-manager.cc-interactive.com.ua/imgmt/incidents');
 });
