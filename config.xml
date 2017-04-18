@@ -25,22 +25,22 @@
     <preference name="android-minSdkVersion" value="7" />
     <preference name="android-installLocation" value="auto" />
     <!--<gap:plugin name="org.apache.cordova.battery-status" />-->
-    <gap:plugin name="org.apache.cordova.camera" />
+    <gap:plugin name="cordova-plugin-camera" spec="~2.4.0" source="npm"/>
     <!--<gap:plugin name="org.apache.cordova.media-capture" />
     <gap:plugin name="org.apache.cordova.console" />
     <gap:plugin name="org.apache.cordova.contacts" />-->
-    <gap:plugin name="org.apache.cordova.device" />
+    <gap:plugin name="cordova-plugin-device" spec="~1.1.5" source="npm"/>
     <!--<gap:plugin name="org.apache.cordova.device-motion" />
     <gap:plugin name="org.apache.cordova.device-orientation" />
     <gap:plugin name="org.apache.cordova.dialogs" />
     <gap:plugin name="org.apache.cordova.file" />
     <gap:plugin name="org.apache.cordova.file-transfer" />-->
-    <gap:plugin name="org.apache.cordova.geolocation" />
+    <gap:plugin name="cordova-plugin-geolocation" spec="~2.4.2" source="npm"/>
     <!--<gap:plugin name="org.apache.cordova.globalization" />
     <gap:plugin name="org.apache.cordova.inappbrowser" />
     <gap:plugin name="org.apache.cordova.media" />
     <gap:plugin name="org.apache.cordova.network-information" />-->
-    <gap:plugin name="org.apache.cordova.splashscreen" />
+    <gap:plugin name="cordova-plugin-splashscreen" spec="~4.0.2" source="npm"/>
     <!--<gap:plugin name="com.plugin.datepicker" />-->
     <gap:plugin name="com.ionic.keyboard"/>
     <gap:plugin name="de.appplant.cordova.plugin.email-composer"/>
