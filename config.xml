@@ -42,9 +42,9 @@
     <gap:plugin name="org.apache.cordova.network-information" />-->
     <gap:plugin name="cordova-plugin-splashscreen" spec="~4.0.2" source="npm"/>
     <!--<gap:plugin name="com.plugin.datepicker" />-->
-    <gap:plugin name="cordova-plugin-ionic-keyboard" source="npm"/>
+    <!--<gap:plugin name="cordova-plugin-ionic-keyboard" source="npm"/>
     <gap:plugin name="cordova-plugin-email-composer" source="npm"/>
-    <gap:plugin name="cordova-sms-plugin" source="npm"/>
+    <gap:plugin name="cordova-sms-plugin" source="npm"/> -->
     <gap:plugin name="cordova-plugin-whitelist" source="npm" />
 
     <gap:config-file platform="android" parent="/manifest">
